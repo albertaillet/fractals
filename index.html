@@ -97,7 +97,15 @@
         gl.vertexAttribPointer(loc, 2, gl.FLOAT, 0, 0, 0);
       }
 
-      let program = createProgram("z.x*z.x - z.y*z.y + c.x", "2.0*z.x*z.y + c.y");
+      const realInput = document.getElementById("realInput");
+      const imagInput = document.getElementById("imagInput");
+      const saved = JSON.parse(localStorage.getItem("fractal") || '{}');
+      const defaultReal = "z.x*z.x - z.y*z.y + c.x";
+      const defaultImag = "2.0*z.x*z.y + c.y";
+      realInput.value = saved.real || defaultReal;
+      imagInput.value = saved.imag || defaultImag;
+
+      let program = createProgram(realInput.value, imagInput.value);
       gl.useProgram(program);
       setupAttributes();
       let centerLoc = gl.getUniformLocation(program, "center");
@@ -129,15 +137,24 @@
         if(e.key==='r'||e.key==='R') {center=[-0.7,0]; zoom=3.5;}
       });
       document.getElementById("applyBtn").addEventListener("click", () => {
-        const p = createProgram(document.getElementById("realInput").value, document.getElementById("imagInput").value);
+        const p = createProgram(realInput.value, imagInput.value);
         if(p) {
           program=p; 
           gl.useProgram(program); 
           setupAttributes();
           centerLoc = gl.getUniformLocation(program,"center"); 
           zoomLoc = gl.getUniformLocation(program,"zoom"); 
-          resolutionLoc = gl.getUniformLocation(program,"resolution");}
+          resolutionLoc = gl.getUniformLocation(program,"resolution");
+          localStorage.setItem("fractal", JSON.stringify({real: realInput.value, imag: imagInput.value}));
+        }
       });
+      realInput.addEventListener("keydown", e => {
+        if(e.key==="Enter") document.getElementById("applyBtn").click();
+      });
+      imagInput.addEventListener("keydown", e => {
+        if(e.key==="Enter") document.getElementById("applyBtn").click();
+      });
+
 
       // Render loop
       function render() {
