@@ -100,9 +100,9 @@
       let program = createProgram("z.x*z.x - z.y*z.y + c.x", "2.0*z.x*z.y + c.y");
       gl.useProgram(program);
       setupAttributes();
-      const centerLoc = gl.getUniformLocation(program, "center");
-      const zoomLoc = gl.getUniformLocation(program, "zoom");
-      const resolutionLoc = gl.getUniformLocation(program, "resolution");
+      let centerLoc = gl.getUniformLocation(program, "center");
+      let zoomLoc = gl.getUniformLocation(program, "zoom");
+      let resolutionLoc = gl.getUniformLocation(program, "resolution");
       let center = [-0.7, 0], zoom = 3.5, isDragging = false, lastX = 0, lastY = 0;
 
       canvas.addEventListener("mousedown", e => (isDragging=true, lastX=e.clientX, lastY=e.clientY));
@@ -130,7 +130,13 @@
       });
       document.getElementById("applyBtn").addEventListener("click", () => {
         const p = createProgram(document.getElementById("realInput").value, document.getElementById("imagInput").value);
-        if(p) {program=p; gl.useProgram(program); setupAttributes();}
+        if(p) {
+          program=p; 
+          gl.useProgram(program); 
+          setupAttributes();
+          centerLoc = gl.getUniformLocation(program,"center"); 
+          zoomLoc = gl.getUniformLocation(program,"zoom"); 
+          resolutionLoc = gl.getUniformLocation(program,"resolution");}
       });
 
       // Render loop
