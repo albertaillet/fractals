@@ -36,7 +36,7 @@
         gl.viewport(0, 0, canvas.width, canvas.height);
       }
       resizeCanvas();
-      window.addEventListener("resize", resizeCanvas);
+      window.addEventListener("resize", () => { resizeCanvas(); render(); });
 
       // Shaders
       const vertexShaderSource = `#version 300 es 
@@ -120,6 +120,7 @@
         center[0] -= ((e.clientX-lastX)/canvas.width)*zoom*a;
         center[1] += ((e.clientY-lastY)/canvas.height)*zoom;
         lastX=e.clientX; lastY=e.clientY;
+        render();
       });
       canvas.addEventListener("mouseup", () => isDragging=false);
       canvas.addEventListener("wheel", e => {
@@ -132,9 +133,10 @@
         zoom *= z;
         center[0] = wx-u[0]*zoom;
         center[1] = wy-u[1]*zoom;
+        render();
       });
       document.addEventListener("keydown", e => {
-        if(e.key==='r'||e.key==='R') {center=[-0.7,0]; zoom=3.5;}
+        if(e.key==='r'||e.key==='R') {center=[-0.7,0]; zoom=3.5; render();}
       });
       document.getElementById("applyBtn").addEventListener("click", () => {
         const p = createProgram(realInput.value, imagInput.value);
@@ -146,6 +148,7 @@
           zoomLoc = gl.getUniformLocation(program,"zoom"); 
           resolutionLoc = gl.getUniformLocation(program,"resolution");
           localStorage.setItem("fractal", JSON.stringify({real: realInput.value, imag: imagInput.value}));
+          render();
         }
       });
       realInput.addEventListener("keydown", e => {
@@ -154,8 +157,6 @@
       imagInput.addEventListener("keydown", e => {
         if(e.key==="Enter") document.getElementById("applyBtn").click();
       });
-
-
       // Render loop
       function render() {
         gl.uniform2f(centerLoc, center[0], center[1]);
@@ -163,7 +164,6 @@
         gl.uniform2f(resolutionLoc, canvas.width, canvas.height);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         coordsDiv.textContent = `Center: (${center[0].toFixed(4)}, ${center[1].toFixed(4)}) | Zoom: ${zoom.toFixed(4)}`;
-        requestAnimationFrame(render);
       }
 
       render();
