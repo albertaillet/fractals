@@ -39,12 +39,9 @@
       window.addEventListener("resize", resizeCanvas);
 
       // Shaders
-      const vertexShaderSource = `#version 300 es
-        in vec4 position;
-        void main() {
-          gl_Position = position;
-        }
-      `;
+      const vertexShaderSource = `#version 300 es 
+        in vec4 position; 
+        void main() { gl_Position = position; }`;
 
       const fragmentShaderSource = `#version 300 es
         precision highp float;
@@ -74,12 +71,7 @@
           }
           
           float col = float(iter) / 256.0;
-          outColor = vec4(
-            sin(col * 3.14159) * 0.5 + 0.5,
-            sin(col * 3.14159 + 2.0) * 0.5 + 0.5,
-            sin(col * 3.14159 + 4.0) * 0.5 + 0.5,
-            1.0
-          );
+          outColor = vec4(0.0, 0.0, col, 1.0);
         }
       `;
 
@@ -147,7 +139,6 @@
         gl.uniform1f(zoomLoc, zoom);
         gl.uniform2f(resolutionLoc, canvas.width, canvas.height);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
         coordsDiv.textContent = `Center: (${center[0].toFixed(4)}, ${center[1].toFixed(4)}) | Zoom: ${zoom.toFixed(4)}`;
         requestAnimationFrame(render);
       }
