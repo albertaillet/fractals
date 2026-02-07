@@ -6,18 +6,14 @@
     <title>Mandelbrot Fractal</title>
     <style>
       body { margin: 0; font-family: monospace; }
-      #info, #controls { position: absolute; left: 10px; }
-      #info { top: 10px; }
-      #controls { bottom: 10px}
+      #controls { position: absolute; top: 10px; background-color: white; }
     </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
-    <div id="info">
+    <div id="controls">
       <div>Scroll: Zoom | Drag: Pan | R: Reset</div>
       <div id="coords"></div>
-    </div>
-    <div id="controls">
       <div>Custom Fractal Formula (use z, c, z.x, z.y, c.x, c.y):</div>
       <div>
         Real part: <input type="text" id="realInput" value="z.x * z.x - z.y * z.y + c.x" />
